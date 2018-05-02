@@ -148,3 +148,20 @@ def processProjectionSet(Is,Ir):
     phi2 = LarkinAnissonSheppard(dx, dy)
 
     return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
+
+
+if __name__ == "__main__":
+    Ir = spytIO.openImage('/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/HA1000_Cigale_3um_gap90_75_Speckle__001_/refForHST0000.edf')
+    Is = spytIO.openImage('/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/HA1000_Cigale_3um_gap90_75_Speckle__001_/HA1000_Cigale_3um_gap90_75_Speckle__001_0001.edf')
+
+    result = processOneProjection(Is, Ir)
+    dx = result['dx']
+    dy = result['dy']
+    phi = result['phi']
+    phi2 = result['phi2']
+    phi3 = result['phi3']
+    spytIO.saveEdf(dx, 'output/dx.edf')
+    spytIO.saveEdf(dy.real, 'output/dy.edf')
+    spytIO.saveEdf(phi.real, 'output/phi.edf')
+    spytIO.saveEdf(phi2.real, 'output/phi2.edf')
+    spytIO.saveEdf(phi3.real, 'output/phi3.edf')
