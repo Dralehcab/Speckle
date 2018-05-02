@@ -69,10 +69,10 @@ def kottler(dX,dY):
     dqy = 2 * pi / (Ny)
     Qx, Qy = np.meshgrid((np.arange(0, Ny) - floor(Ny / 2) - 1) * dqy, (np.arange(0, Nx) - floor(Nx / 2) - 1) * dqx)
 
-    polarAngle = np.arctan2(Qx, Qy)
+    polarAngle = np.arctan(Qx, Qy)
     ftphi = fftshift(fft2(dX + i * dY))*np.exp(i*polarAngle)
     ftphi[np.isnan(ftphi)] = 0
-    phi3 = ifftshift(fftshift(ftphi))
+    phi3 = ifft2(fftshift(ftphi))
     return phi3
 
 
@@ -89,11 +89,14 @@ def LarkinAnissonSheppard(dx,dy,alpha =0 ,sigma=0):
     dqy = 2 * pi / (Ny)
     Qx, Qy = np.meshgrid((np.arange(0, Ny) - floor(Ny / 2) - 1) * dqy, (np.arange(0, Nx) - floor(Nx / 2) - 1) * dqx)
 
-    ftfilt = 1 / (i*Qx - Qy+np.finfo(Qx.dtype).eps)
+    ftfilt = 1 / (i * Qx - Qy ) + np.finfo(Qx.dtype).eps
     ftfilt[np.isnan(ftfilt)] = 0
     phi=ifft2(ifftshift(ftfilt*fourrierOfG))
     phi=np.absolute(phi.real)
     return phi
+
+
+
 
 
 
@@ -108,10 +111,6 @@ def processOneProjection(Is,Ir):
     phi2 = LarkinAnissonSheppard(dx, dy)
 
     return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
-
-
-
-
 
 def processProjectionSetWithDarkFields(Is,Ir,dark):
     sigma = 1
