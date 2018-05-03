@@ -53,9 +53,9 @@ def makeDarkMean(Darkfiedls):
 
 def saveEdf(data,filename):
     print(filename)
-    #dataToStore=data.astype(np.float)
+    dataToStore=data.astype(np.float32)
     outputEdf = edf.EdfFile( filename, access='wb+')
-    outputEdf.WriteImage({},data)
+    outputEdf.WriteImage({},dataToStore)
 
 
 def save3D_Edf(data,filename):
