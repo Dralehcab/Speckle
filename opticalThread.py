@@ -52,7 +52,7 @@ class OpticalFlowSolver(Thread):
             Ir = spytIO.openSeq(referencesFiles)
             df = spytIO.openSeq(darkFieldFiles)
             #Is, Ir = corr.registerImagesBetweenThemselves(Is, Ir)
-            result = OpticalFlow.processProjectionSetWithDarkFields(Is, Ir, df)
+            result = OpticalFlow.processProjectionSet(Is, Ir, df)
 
             dx = result['dx']
             dy = result['dy']

@@ -31,8 +31,6 @@ def processOneProjection(listOfDictionnaries,projectionNumber):
     df=spytIO.openSeq(darkFieldFiles)
     print(df.shape)
     #Is,Ir=corr.registerImagesBetweenThemselves(Is,Ir)
-    spytIO.save3D_Edf(Is,'/Volumes/ID17/speckle/md1097/id17/Phantoms/ThreeDimensionalPhantom/OpticalFlowMultiTomo/Is/Is_')
-    spytIO.save3D_Edf(Ir,'/Volumes/ID17/speckle/md1097/id17/Phantoms/ThreeDimensionalPhantom/OpticalFlowMultiTomo/Ir/Ir_')
 
     toReturn=OpticalFlow.processProjectionSetWithDarkFields(Is,Ir,df)
     return toReturn
@@ -167,7 +165,7 @@ if __name__ == "__main__":
     tomoFolders=glob.glob(inputFolder+'HA800_zebra2_3um_Gap90_75_Speck01*')
     tomoFolders.sort()
     print(tomoFolders)
-    processAllFoldersThreaded(tomoFolders,outputFolder,nbThread=1)
+    processAllFoldersThreaded(tomoFolders,outputFolder,nbThread=4)
 
     #result=parseTomoFolderAndCreateRefFiles(tomoFolders[0])
     #print result
