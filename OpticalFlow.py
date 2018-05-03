@@ -67,42 +67,12 @@ def kottler(dX,dY):
     dqy = 2 * pi / (Ny)
     Qx, Qy = np.meshgrid((np.arange(0, Ny) - floor(Ny / 2) - 1) * dqy, (np.arange(0, Nx) - floor(Nx / 2) - 1) * dqx)
 
-    polarAngle = np.arctan(Qx, Qy)
+    polarAngle = np.arctan2(Qx, Qy)
     ftphi = fftshift(fft2(dX + i * dY))*np.exp(i*polarAngle)
     ftphi[np.isnan(ftphi)] = 0
-    phi3 = ifft2(fftshift(ftphi))
-    return phi3
+    phi3 = ifft2(ifftshift(ftphi))
+    return phi3.real
 
-
-
-def kottler2(dX,dY):
-    print('kottler')
-    NN, MM = dX.shape
-    wx, wy = np.meshgrid(fftfreq(MM) * 2 * np.pi,
-                         fftfreq(NN) * 2 * np.pi, indexing='xy')
-
-
-    numerator = fft2(dX + 1j * dY)
-    denominator=2.*np.pi*1j*wx - 2.*np.pi+1j*wy
-    res = ifft2(numerator/denominator)
-    #res -= np.mean(np.real(res))
-    return res.real
-
-
-
-
-def LarkinAnissonSheppard2(dX,dY):
-    NN, MM = dX.shape
-    wx, wy = np.meshgrid(fftfreq(MM) * 2 * np.pi,
-                         fftfreq(NN) * 2 * np.pi, indexing='xy')
-
-    # by using fftfreq there is no need to use fftshift
-    numerator = fft2(dX + 1j*dY)
-    denominator = 1j*wx - wy + np.finfo(dX.dtype).eps
-
-    res = ifft2(numerator / denominator)
-    res -= np.mean(np.real(res))
-    return res.real
 
 
 def LarkinAnissonSheppard(dx,dy,alpha =0 ,sigma=0):
@@ -111,15 +81,18 @@ def LarkinAnissonSheppard(dx,dy,alpha =0 ,sigma=0):
     G= dx + i*dy
     # fourier transfomm of the G function
     fourrierOfG = fftshift(fft2(G))
+
+
     dqx = 2 * pi / (Nx)
     dqy = 2 * pi / (Ny)
     Qx, Qy = np.meshgrid((np.arange(0, Ny) - floor(Ny / 2) - 1) * dqy, (np.arange(0, Nx) - floor(Nx / 2) - 1) * dqx)
-    print(np.finfo(Qx.dtype).eps)
-    ftfilt = 1 / (i*Qx - Qy + np.finfo(Qx.dtype).eps)
+
+    ftfilt = 1 / (i * Qx - Qy)
     ftfilt[np.isnan(ftfilt)] = 0
     phi=ifft2(ifftshift(ftfilt*fourrierOfG))
-    phi=np.absolute(phi.real)
+    phi=phi.real
     return phi
+
 
 
 
@@ -132,8 +105,8 @@ def processOneProjection(Is,Ir):
     alpha=np.finfo(np.float32).eps
     dx, dy = derivativesByOpticalflow(Is, dI, alpha=alpha, sig_scale=sigma)
     phi = fc.frankotchellappa(dx, dy, False)
-    phi3 = kottler2(dx, dy)
-    phi2 = LarkinAnissonSheppard2(dx, dy)
+    phi3 = kottler(dx, dy)
+    phi2 = LarkinAnissonSheppard(dx, dy)
 
     return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
 
@@ -150,8 +123,8 @@ def processProjectionSetWithDarkFields(Is,Ir,dark):
     dI = (subImage * (np.mean(Is) / np.mean(Ir)))
     dx, dy = derivativesByOpticalflow(np.mean(Ir,axis=0), dI, alpha=alpha, sig_scale=sigma)
     phi = fc.frankotchellappa(dx, dy, False)
-    phi3 = kottler2(dx, dy)
-    phi2 = LarkinAnissonSheppard2(dx, dy)
+    phi3 = kottler(dx, dy)
+    phi2 = LarkinAnissonSheppard(dx, dy)
 
     return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
 
@@ -168,8 +141,8 @@ def processProjectionSet(Is,Ir):
     dI = (subImage * (np.mean(Is) / np.mean(Ir)))
     dx, dy = derivativesByOpticalflow(np.mean(Ir,axis=0), dI, alpha=alpha, sig_scale=sigma)
     phi = fc.frankotchellappa(dx, dy, False)
-    phi3 = kottler2(dx, dy)
-    phi2 = LarkinAnissonSheppard2(dx, dy)
+    phi3 = kottler(dx, dy)
+    phi2 = LarkinAnissonSheppard(dx, dy)
 
     return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
 
