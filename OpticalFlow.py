@@ -148,8 +148,9 @@ def processProjectionSet(Is,Ir):
 
 
 if __name__ == "__main__":
-    Ir = spytIO.openImage('/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/HA1000_Cigale_3um_gap90_75_Speckle__001_/ref0031_0000.edf')
-    Is = spytIO.openImage('/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/HA1000_Cigale_3um_gap90_75_Speckle__001_/HA1000_Cigale_3um_gap90_75_Speckle__001_0001.edf')
+    Ir = spytIO.openImage('/Volumes/ID17/speckle/md1097/id17/SpeckleBrainM00/HA400_Speckle_Brain_00_32_6um__001__017_/ref0031_0000.edf')
+    Is = spytIO.openImage('/Volumes/ID17/speckle/md1097/id17/SpeckleBrainM00/HA400_Speckle_Brain_00_32_6um__001__017_/HA400_Speckle_Brain_00_32_6um__001__017_3566.edf')
+
 
     result = processOneProjection(Is, Ir)
     dx = result['dx']

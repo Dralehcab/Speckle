@@ -106,7 +106,7 @@ def processAllFoldersThreaded(listOfFolders,outputFolder,nbThread=4):
         else:
             listOfProjections = (np.arange(i*nbProjByThread,(i+1)*nbProjByThread))
 
-        myThread=opticalThread.OpticalFlowSolver(listOfDictionaries,listOfProjections,outputFolder)
+        myThread=opticalThread.multiTomoOpticalFlowSolver(listOfDictionaries,listOfProjections,outputFolder)
         listofThreads.append(myThread)
 
     for i in range(nbThread):

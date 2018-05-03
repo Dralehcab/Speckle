@@ -11,7 +11,56 @@ def createFolder(folder):
         os.mkdir(folder)
 
 
-class OpticalFlowSolver(Thread):
+class OpticalFlowSolverThread(Thread):
+    def __init__(self, dictio,listOfProjections,outputFolder):
+        Thread.__init__(self)
+        self.dictionaryOfExperiment = dictio
+        self.listOfProjection=listOfProjections
+        self.output=outputFolder
+        self.createFolders()
+
+    def createFolders(self):
+        self.dxFolder = self.output + '/dx/'
+        self.dyFolder = self.output + '/dy/'
+        self.phiFolder = self.output + '/phi/'
+        self.phiLarkin = self.output + '/phiLarkin/'
+        self.phiKottler = self.output + '/phiKottler/'
+
+        createFolder(self.dxFolder)
+        createFolder(self.dyFolder)
+        createFolder(self.phiFolder)
+        createFolder(self.phiLarkin)
+        createFolder(self.phiKottler)
+
+    def saveResult(self,res,projNumber):
+        dx = res['dx']
+        dy = res['dy']
+        phi = res['phi']
+        phi2 = res['phi2']
+        phi3 = res['phi3']
+        txtProj = '%4.4d' % projNumber
+        spytIO.saveEdf(dx, self.dxFolder+'/dx_' + txtProj + '.edf')
+        spytIO.saveEdf(dy.real, self.dyFolder+'/dy_' + txtProj + '.edf')
+        spytIO.saveEdf(phi.real, self.phiFolder+'/phi_' + txtProj + '.edf')
+        spytIO.saveEdf(phi2.real, self.phiLarkin+'/phiLarkin_' + txtProj + '.edf')
+        spytIO.saveEdf(phi3.real, self.phiKottler+'/phiKottler' + txtProj + '.edf')
+
+
+
+    def run(self):
+        projectionFiles = self.dictionaryOfExperiment['projections']
+        referenceFilename = self.dictionaryOfExperiment['references'][0]
+        Ir = spytIO.openImage(referenceFilename)
+        for numeroProjection in self.listOfProjection:
+            numeroProjection = int(numeroProjection)
+            print('Processing ' + str(numeroProjection))
+            projectionFileName=projectionFiles[numeroProjection]
+            Is=spytIO.openImage(projectionFileName)
+            result = OpticalFlow.processOneProjection(Is, Ir)
+            self.saveResult(result, numeroProjection)
+
+
+class multiTomoOpticalFlowSolver(Thread):
 
     def __init__(self, listOfDictionaries,listOfProjections,outputFolder):
         Thread.__init__(self)
@@ -24,7 +73,7 @@ class OpticalFlowSolver(Thread):
         self.dxFolder = self.output + '/dx/'
         self.dyFolder = self.output + '/dy/'
         self.phiFolder = self.output + '/phi/'
-        self.phi2Folder = self.output + '/phi2/'
+        self.phi2Folder = self.output + '/phi/'
         self.phi3Folder = self.output + '/phi3/'
 
         createFolder(self.dxFolder)
