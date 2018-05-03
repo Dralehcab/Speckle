@@ -1,4 +1,4 @@
-from skimage.feature import register_translation
+
 from scipy.ndimage import gaussian_filter
 from scipy.ndimage import fourier_shift
 import numpy as np
@@ -9,7 +9,7 @@ import EdfFile as edf
 
 
 def registerRefAndSample(Ir,Is,precision):
-
+    from skimage.feature import register_translation
     # correction of beam movementn
     shifts, error, phasediff = register_translation(Is, Ir, precision)
     offset_image = fourier_shift(np.fft.fftn(Ir), shifts)
@@ -28,6 +28,7 @@ def getShift(Im1,Im2,precision=1000):
 
 
 def registerImagesBetweenThemselves(im1, im2,sliceReference=0):
+    from skimage.feature import register_translation
     Is=im1.copy()
     Ir= im2.copy()
 

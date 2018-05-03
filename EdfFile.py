@@ -33,7 +33,6 @@ __copyright__ = "European Synchrotron Radiation Facility, Grenoble, France"
 """
     EdfFile.py
     Generic class for Edf files manipulation.
-
     Interface:
     ===========================
     class EdfFile:
@@ -44,8 +43,6 @@ __copyright__ = "European Synchrotron Radiation Facility, Grenoble, France"
         GetHeader(self,Index)
         GetStaticHeader(self,Index)
         WriteImage (self,Header,Data,Append=1,DataType="",WriteAsUnsigened=0,ByteOrder="")
-
-
     Edf format assumptions:
     ===========================
     The following details were assumed for this implementation:
@@ -69,7 +66,6 @@ __copyright__ = "European Synchrotron Radiation Facility, Grenoble, France"
         Size = 4000000                        ; size of data section
         Dim_1= 1000                           ; x coordinates
         Dim_2 = 1000                          ; y coordinates
-
         (padded with spaces to complete 1024 bytes)
         }
     - There are some fields in the header that are required for this implementation. If any of
@@ -176,7 +172,6 @@ class  EdfFile(object):
     #Interface
     def __init__(self, FileName, access=None, fastedf=None):
         """ Constructor
-
         @param  FileName:   Name of the file (either existing or to be created)
         @type FileName: string
         @param access: access mode "r" for reading (the file should exist) or
@@ -611,7 +606,6 @@ class  EdfFile(object):
                             (0,0) or (0,0,0)
             Size:           Tuple, size of the data to be returned as x) or (x,y) or
                             (x,y,z) if ommited, is the distance from Pos to the end.
-
             If Pos and Size not mentioned, returns the whole data.
         """
         fastedf = self.fastedf
@@ -756,8 +750,7 @@ class  EdfFile(object):
         return Data
 
 
-
-    def GetPixel(self, Index, Position):
+    def _GetPixel(self, Index, Position):
         """ Returns double value of the pixel, regardless the format of the array
             Index:      The zero-based index of the image in the file
             Position:   Tuple with the coordinete (x), (x,y) or (x,y,z)
@@ -767,7 +760,8 @@ class  EdfFile(object):
         if len(Position) != self.Images[Index].NumDim:
             raise ValueError("EdfFile: coordinate with wrong dimension ")
 
-        size_pixel = self.__GetSizeNumpyType__(self.__GetDefaultNumpyType__(self.Images[Index].DataType), index=Index)
+        size_pixel = self.__GetSizeNumpyType__(self.__GetDefaultNumpyType__(self.Images[Index].DataType,
+                                                                            index=Index))
         offset = Position[0] * size_pixel
         if self.Images[Index].NumDim > 1:
             size_row = size_pixel * self.Images[Index].Dim1
@@ -776,11 +770,25 @@ class  EdfFile(object):
                 size_img = size_row * self.Images[Index].Dim2
                 offset = offset + (Position[2] * size_img)
         self.File.seek(self.Images[Index].DataPosition + offset, 0)
-        Data = numpy.fromstring(self.File.read(size_pixel), self.__GetDefaultNumpyType__(self.Images[Index].DataType, index=Index))
+        Data = numpy.fromstring(self.File.read(size_pixel),
+                                self.__GetDefaultNumpyType__(self.Images[Index].DataType,
+                                                             index=Index))
         if self.SysByteOrder.upper() != self.Images[Index].ByteOrder.upper():
             Data = Data.byteswap()
         Data = self.__SetDataType__ (Data, "DoubleValue")
         return Data[0]
+
+
+    def GetPixel(self, Index, Position):
+        """ Returns double value of the pixel, regardless the format of the array
+            Index:      The zero-based index of the image in the file
+            Position:   Tuple with the coordinete (x), (x,y) or (x,y,z)
+        """
+        try:
+            self.__makeSureFileIsOpen()
+            return self._GetPixel(Index, Position)
+        finally:
+            self.__makeSureFileIsClosed()
 
 
     def GetHeader(self, Index):
@@ -1265,5 +1273,3 @@ if __name__ == "__main__":
     #Saves in the original format (unsigned short)
     OldHeader = exe.GetStaticHeader(2)
     exe.WriteImage({}, ushort, 1, OldHeader["DataType"])
-
-
