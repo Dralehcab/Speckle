@@ -109,7 +109,7 @@ def opticalFlowSolverMultipleThread(inputFolder,outputFolder,nbThread=4):
 
 if __name__ == "__main__":
     inputFolder='/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/HA1000_Cigale_3um_gap90_75_Speckle__004_'
-    outputFolder='/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/OpticalFlow1pt_Speck004/'
+    outputFolder='/Volumes/ID17/broncho/IHR_April2018/CigaleNuit/OpticalFlow1pt_Speck005/'
     #createOutput(outputFolder)
     #ddict=parseTomoFolderAndCreateRefFiles(inputFolder)
     #opticalFlowSolverOneThread(ddict,outputFolder)

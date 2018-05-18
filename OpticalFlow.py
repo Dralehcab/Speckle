@@ -148,8 +148,8 @@ def processProjectionSet(Is,Ir):
 
 
 if __name__ == "__main__":
-    Ir = spytIO.openImage('/Volumes/ID17/speckle/md1097/id17/SpeckleBrainM00/HA400_Speckle_Brain_00_32_6um__001__017_/ref0031_0000.edf')
-    Is = spytIO.openImage('/Volumes/ID17/speckle/md1097/id17/SpeckleBrainM00/HA400_Speckle_Brain_00_32_6um__001__017_/HA400_Speckle_Brain_00_32_6um__001__017_3566.edf')
+    Ir = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/ref/ref_40kV_5.2um_30s_12cm_53cm_speck09.tif')
+    Is = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/sample/mouche_40kV_5.2um_30s_12cm_53cm_speck09.tif')
 
 
     result = processOneProjection(Is, Ir)
@@ -158,8 +158,8 @@ if __name__ == "__main__":
     phi = result['phi']
     phi2 = result['phi2']
     phi3 = result['phi3']
-    spytIO.saveEdf(dx, '/Volumes/TMP_14_DAYS/embrun/dx.edf')
-    spytIO.saveEdf(dy.real, '/Volumes/TMP_14_DAYS/embrun/dy.edf')
-    spytIO.saveEdf(phi.real, '/Volumes/TMP_14_DAYS/embrun/phi.edf')
-    spytIO.saveEdf(phi2.real, '/Volumes/TMP_14_DAYS/embrun/phiLarkinson.edf')
-    spytIO.saveEdf(phi3.real, '/Volumes/TMP_14_DAYS/embrun/phiKottler.edf')
+    spytIO.saveEdf(dx, 'output/dxPython2.edf')
+    spytIO.saveEdf(dy.real, 'output/dy.edf')
+    spytIO.saveEdf(phi.real, 'output/phi.edf')
+    spytIO.saveEdf(phi2.real, 'output/phiLarkinson.edf')
+    spytIO.saveEdf(phi3.real, 'output/phiKottler.edf')
