@@ -73,8 +73,8 @@ class multiTomoOpticalFlowSolver(Thread):
         self.dxFolder = self.output + '/dx/'
         self.dyFolder = self.output + '/dy/'
         self.phiFolder = self.output + '/phi/'
-        self.phi2Folder = self.output + '/phi/'
-        self.phi3Folder = self.output + '/phi3/'
+        self.phi2Folder = self.output + '/phiKottler/'
+        self.phi3Folder = self.output + '/phiLarkin/'
 
         createFolder(self.dxFolder)
         createFolder(self.dyFolder)
@@ -110,11 +110,11 @@ class multiTomoOpticalFlowSolver(Thread):
             phi3 = result['phi3']
 
             textProj='%4.4d'%numeroProjection
-            spytIO.saveEdf(dx.real, self.dxFolder + '/dx' + textProj + '.edf')
-            spytIO.saveEdf(dy.real, self.dyFolder + '/dy' + textProj + '.edf')
-            spytIO.saveEdf(phi.real, self.phiFolder + '/phi' + textProj + '.edf')
-            spytIO.saveEdf(phi2.real, self.phi2Folder + '/phi2' + textProj + '.edf')
-            spytIO.saveEdf(phi3.real, self.phi3Folder + '/phi3' + textProj + '.edf')
+            spytIO.saveEdf(dx.real, self.dxFolder + '/dx_' + textProj + '.edf')
+            spytIO.saveEdf(dy.real, self.dyFolder + '/dy_' + textProj + '.edf')
+            spytIO.saveEdf(phi.real, self.phiFolder + '/phi_' + textProj + '.edf')
+            spytIO.saveEdf(phi2.real, self.phi2Folder + '/phiKottler_' + textProj + '.edf')
+            spytIO.saveEdf(phi3.real, self.phi3Folder + '/phiLarkin_' + textProj + '.edf')
 
 
 

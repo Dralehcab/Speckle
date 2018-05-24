@@ -68,9 +68,9 @@ def processAllFolders(listOfFolders,outputFolder):
         phi3 = result['phi3']
         spytIO.saveEdf(dx, dxFolder + '/dx'+textProj+'.edf')
         spytIO.saveEdf(dy.real, dyFolder + '/dy'+textProj+'.edf')
-        spytIO.saveEdf(phi.real, phiFolder + '/phi'+textProj+'.edf')
-        spytIO.saveEdf(phi2.real, phi2Folder + '/phi2'+textProj+'.edf')
-        spytIO.saveEdf(phi3.real, phi3Folder + '/phi3'+textProj+'.edf')
+        spytIO.saveEdf(phi.real, phiFolder + '/phi_'+textProj+'.edf')
+        spytIO.saveEdf(phi2.real, phi2Folder + '/phiKottler_'+textProj+'.edf')
+        spytIO.saveEdf(phi3.real, phi3Folder + '/phiLarkin_'+textProj+'.edf')
 
 
 
@@ -81,8 +81,8 @@ def processAllFoldersThreaded(listOfFolders,outputFolder,nbThread=4):
     dxFolder = outputFolder + '/dx/'
     dyFolder = outputFolder + '/dy/'
     phiFolder = outputFolder + '/phi/'
-    phi2Folder = outputFolder + '/phi2/'
-    phi3Folder = outputFolder + '/phi3/'
+    phi2Folder = outputFolder + '/phiKottler/'
+    phi3Folder = outputFolder + '/phiLarkin/'
     mkdir(dxFolder)
     mkdir(dyFolder)
     mkdir(phiFolder)
