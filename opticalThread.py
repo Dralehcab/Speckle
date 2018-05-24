@@ -99,9 +99,9 @@ class multiTomoOpticalFlowSolver(Thread):
 
             Is = spytIO.openSeq(projectionFiles)
             Ir = spytIO.openSeq(referencesFiles)
-            df = spytIO.openSeq(darkFieldFiles)
+            #df = spytIO.openSeq(darkFieldFiles)
             #Is, Ir = corr.registerImagesBetweenThemselves(Is, Ir)
-            result = OpticalFlow.processProjectionSet(Is, Ir, df)
+            result = OpticalFlow.processProjectionSet(Is, Ir)
 
             dx = result['dx']
             dy = result['dy']

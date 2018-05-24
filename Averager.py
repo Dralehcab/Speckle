@@ -1,5 +1,7 @@
 import numpy as np
-from EdfFile import EdfFile as edfFile
+#from EdfFile import EdfFile as edfFile
+from spytIO import openImage,saveEdf
+
 import math
 
 
@@ -17,23 +19,23 @@ class Averager(object):
 
     def processAverage(self):
         print('Average ')
-        dat = edfFile(self.fileNames[0]).GetData(0)
+        dat = openImage(self.fileNames[0])
         shape = dat.shape
         self.output = np.zeros(shape)
         for filenam in self.fileNames:
-            dat = edfFile(filenam).GetData(0)
+            dat = openImage(filenam)
             self.output += dat
         self.output=np.divide(self.output, len(self.fileNames))
 
     def processMedian(self):
         print('Median ')
 
-        dat = edfFile(self.fileNames[0]).GetData(0)
+        dat = openImage(self.fileNames[0])
         shape = dat.shape
         self.bigMat = np.zeros((len(self.fileNames), dat.shape[0], dat.shape[1]))
         cpt = 0
         for filenam in self.fileNames:
-            dat = edfFile(filenam).GetData(0)
+            dat = openImage(filenam)
             self.bigMat[cpt] += dat
             cpt += 1
 
@@ -41,7 +43,7 @@ class Averager(object):
 
     def save(self):
         print('Save output ' + self.outputFilename)
-        edfFile(self.outputFilename).WriteImage({}, self.output, Append=0, DataType='FloatValue')
+        saveEdf(self.output,self.outputFilename)
 
 
 if __name__ == "__main__":
