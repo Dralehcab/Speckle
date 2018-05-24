@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-def generateArrayOfNumbers(nbPoints,deb,end):
+def generateArrayOfRandomNumbers(nbPoints,deb,end):
     listOfPoint=[]
     if(deb<end):
         while(len(listOfPoint)<nbPoints):

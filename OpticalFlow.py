@@ -98,7 +98,7 @@ def LarkinAnissonSheppard(dx,dy,alpha =0 ,sigma=0):
 
 
 def processOneProjection(Is,Ir):
-    sigma = 0.95
+    sigma = 0.9
     alpha = 0
 
     dI = (Is - Ir * (np.mean(gaussian_filter(Is,sigma=2.)) / np.mean(gaussian_filter(Ir,sigma=2.))))
@@ -108,7 +108,13 @@ def processOneProjection(Is,Ir):
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
 
-    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
+    mintoAdd = max(np.amin(dx), np.amin(dy))
+    dxPlus = dx + mintoAdd
+    dyPlus = dy + mintoAdd
+
+    gradientNorm = np.sqrt(dxPlus ** 2 + dyPlus ** 2)
+
+    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3,'gradientNorm':gradientNorm}
 
 def processProjectionSetWithDarkFields(Is,Ir,dark):
     sigma = 1
@@ -125,14 +131,19 @@ def processProjectionSetWithDarkFields(Is,Ir,dark):
     phi = fc.frankotchellappa(dx, dy, False)
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
+    mintoAdd = max(np.amin(dx), np.amin(dy))
+    dxPlus = dx + mintoAdd
+    dyPlus = dy + mintoAdd
 
-    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
+    gradientNorm = np.sqrt(dxPlus ** 2 + dyPlus ** 2)
+
+    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3,'gradientNorm':gradientNorm}
 
 
 
 
 def processProjectionSet(Is,Ir):
-    sigma = 1
+    sigma = 0.9
     alpha = 0
 
     subImage=Is-Ir
@@ -143,23 +154,35 @@ def processProjectionSet(Is,Ir):
     phi = fc.frankotchellappa(dx, dy, False)
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
+    mintoAdd = max(np.amin(dx), np.amin(dy))
+    dxPlus=dx+mintoAdd
+    dyPlus=dy+mintoAdd
 
-    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3}
+    gradientNorm = np.sqrt(dxPlus**2 + dyPlus**2)
+
+    return {'dx': dx, 'dy': dy, 'phi': phi, 'phi2': phi2,'phi3': phi3,'gradientNorm':gradientNorm }
 
 
 if __name__ == "__main__":
-    Ir = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/ref/ref_40kV_5.2um_30s_12cm_53cm_speck09.tif')
-    Is = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/sample/mouche_40kV_5.2um_30s_12cm_53cm_speck09.tif')
-
-
+    Ir = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/ref/ref_40kV_5.2um_30s_12cm_53cm_speck14.tif')
+    Is = spytIO.openImage('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/sample/mouche_40kV_5.2um_30s_12cm_53cm_speck14.tif')
     result = processOneProjection(Is, Ir)
+
+    #IrNames=glob.glob('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/ref/*.tif')
+    #IsNames= glob.glob('/Users/embrun/Codes/specklematching/Experiments/MoucheSimapAout2017/sample/*.tif')
+    #Ir=spytIO.openSeq(IrNames)
+    #Is= spytIO.openSeq(IsNames)
+    #result = processProjectionSet(Is, Ir)
+
     dx = result['dx']
     dy = result['dy']
     phi = result['phi']
     phi2 = result['phi2']
     phi3 = result['phi3']
+    gradientNorm=result['gradientNorm']
     spytIO.saveEdf(dx, 'output/dxPython2.edf')
     spytIO.saveEdf(dy.real, 'output/dy.edf')
     spytIO.saveEdf(phi.real, 'output/phi.edf')
     spytIO.saveEdf(phi2.real, 'output/phiLarkinson.edf')
     spytIO.saveEdf(phi3.real, 'output/phiKottler.edf')
+    spytIO.saveEdf(gradientNorm, 'output/gradientNorm.edf')
