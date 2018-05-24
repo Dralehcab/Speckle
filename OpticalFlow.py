@@ -108,7 +108,7 @@ def processOneProjection(Is,Ir):
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
 
-    mintoAdd = max(np.amin(dx), np.amin(dy))
+    mintoAdd = min(np.amin(dx), np.amin(dy))
     dxPlus = dx + mintoAdd
     dyPlus = dy + mintoAdd
 
@@ -131,7 +131,7 @@ def processProjectionSetWithDarkFields(Is,Ir,dark):
     phi = fc.frankotchellappa(dx, dy, False)
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
-    mintoAdd = max(np.amin(dx), np.amin(dy))
+    mintoAdd = min(np.amin(dx), np.amin(dy))
     dxPlus = dx + mintoAdd
     dyPlus = dy + mintoAdd
 
@@ -154,7 +154,7 @@ def processProjectionSet(Is,Ir):
     phi = fc.frankotchellappa(dx, dy, False)
     phi3 = kottler(dx, dy)
     phi2 = LarkinAnissonSheppard(dx, dy)
-    mintoAdd = max(np.amin(dx), np.amin(dy))
+    mintoAdd = min(np.amin(dx), np.amin(dy))
     dxPlus=dx+mintoAdd
     dyPlus=dy+mintoAdd
 
